@@ -11,12 +11,10 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxTwoTonIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuItem from "@material-ui/core/MenuItem";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -32,14 +30,16 @@ import StarTwoToneIcon from "@material-ui/icons/StarTwoTone";
 
 import { makeStyles } from "@material-ui/core/styles";
 
+import { StylesProvider } from "@material-ui/core/styles";
+
 import Menu from "@material-ui/core/Menu";
 
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 
-import { Switch, Route, Routes, NavLink as Link } from "react-router-dom";
+import { Route, Switch, NavLink as Link } from "react-router-dom";
 
 import { Avatar } from "@material-ui/core";
-import DocMain from "../components/document_manager/DocMain";
+import FolderChooser from "../components/document_manager/DocMain";
 import UserList from "../components/account/UserList";
 import { red } from "@material-ui/core/colors";
 
@@ -114,7 +114,9 @@ const styles = (theme) => ({
   },
   content: {
     flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
+    minWidth: 0, // So the Typography noWrap works
   },
   grow: {
     flexGrow: 1,
@@ -363,9 +365,10 @@ class MiniDrawer extends React.Component {
           </List>
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
           <Switch>
-            <Route path="/" exact component={DocMain} />
+            <StylesProvider injectFirst>
+              <Route path="/" exact component={FolderChooser} />
+            </StylesProvider>
             <Route path="/users" component={UserList} />
           </Switch>
         </main>
@@ -376,7 +379,6 @@ class MiniDrawer extends React.Component {
 
 MiniDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MiniDrawer);
+export default withStyles(styles)(MiniDrawer);
