@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from apps.documents.utils import docs_file_name
 
 
 class Collaborator(models.Model):
@@ -44,6 +45,7 @@ class Document(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
     type = models.CharField(max_length=20, blank=True, default="")
     directory = models.CharField(max_length=200, blank=True, default="")
+    file = models.FileField(upload_to=docs_file_name, default="")
     description = models.CharField(max_length=200, blank=True, default="")
     owner = models.ForeignKey(
         "auth.User", related_name="documents", on_delete=models.CASCADE, null=True
