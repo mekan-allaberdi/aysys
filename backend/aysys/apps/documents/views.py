@@ -13,11 +13,12 @@ from rest_framework.filters import SearchFilter
 from django.db.models import Q
 
 from apps.documents.permissions import IsCurrentOrSuperUser
-from apps.documents.models import Document, Project, Collaborator
+from apps.documents.models import Folder, Document, Project, Collaborator
 from apps.documents.serializers import (
     DocumentSerializer,
     ProjectSerializer,
     CollaboratorSerializer,
+    FolderSerializer,
 )
 
 
@@ -30,8 +31,15 @@ def api_root(request, format=None):
                 "collaborator-list", request=request, format=format
             ),
             "documents": reverse("document-list", request=request, format=format),
+            "folders": reverse("folder-list", request=request, format=format),
         }
     )
+
+
+class FolderViewSet(viewsets.ModelViewSet):
+    # permission_classes = [IsAuthenticated]
+    serializer_class = FolderSerializer
+    queryset = Folder.objects.all()
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -44,7 +52,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 "allowed_groups",
                 "type",
                 "project",
-                "directory",
+                "folder",
             ]
 
     filter_class = DocumentFilter
