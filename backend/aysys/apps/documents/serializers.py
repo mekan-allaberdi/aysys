@@ -1,5 +1,19 @@
 from rest_framework import serializers
-from apps.documents.models import Collaborator, Project, Document
+from apps.documents.models import Collaborator, Project, Document, Folder
+
+
+class FolderSerializer(serializers.HyperlinkedModelSerializer):
+    child_folders = serializers.HyperlinkedIdentityField(
+        many=True, view_name="folder-detail", read_only=True
+    )
+
+    child_documents = serializers.HyperlinkedIdentityField(
+        many=True, view_name="document-detail", read_only=True
+    )
+
+    class Meta:
+        model = Folder
+        fields = ["name", "path", "parent_folder", "child_folders", "child_documents"]
 
 
 class DocumentSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,7 +24,7 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             "url",
             "name",
-            "directory",
+            "folder",
             "description",
             "type",
             "file",

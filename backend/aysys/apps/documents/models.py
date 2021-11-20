@@ -41,12 +41,26 @@ class Project(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
 
+class Folder(models.Model):
+    name = models.CharField(max_length=100, blank=False, default="Untitled")
+    path = models.CharField(max_length=200, blank=True, default="")
+    parent_folder = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        related_name="child_folders",
+        null=True,
+        blank=True,
+    )
+
+
 class Document(models.Model):
     name = models.CharField(max_length=50, blank=True, default="")
     type = models.CharField(max_length=20, blank=True, default="")
-    directory = models.CharField(max_length=200, blank=True, default="")
     file = models.FileField(upload_to=docs_file_name, default="")
     description = models.CharField(max_length=200, blank=True, default="")
+    folder = models.ForeignKey(
+        "Folder", related_name="child_documents", on_delete=models.CASCADE, null=True
+    )
     owner = models.ForeignKey(
         "auth.User", related_name="documents", on_delete=models.CASCADE, null=True
     )
