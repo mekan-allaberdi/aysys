@@ -37,8 +37,20 @@ def api_root(request, format=None):
 
 
 class FolderViewSet(viewsets.ModelViewSet):
-    # permission_classes = [IsAuthenticated]
+    class FolderFilter(FilterSet):
+        class Meta:
+            model = Folder
+            fields = [
+                "path",
+                "parent_folder",
+            ]
+
+    permission_classes = [IsAuthenticated]
     serializer_class = FolderSerializer
+    filter_class = FolderFilter
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ["project__name", "name", "type"]
+
     queryset = Folder.objects.all()
 
 
@@ -54,6 +66,8 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 "project",
                 "folder",
             ]
+
+    http_method_names = ["get", "post", "put"]
 
     filter_class = DocumentFilter
     filter_backends = [DjangoFilterBackend, SearchFilter]
