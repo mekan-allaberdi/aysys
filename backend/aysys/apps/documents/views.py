@@ -49,7 +49,7 @@ class FolderViewSet(viewsets.ModelViewSet):
     serializer_class = FolderSerializer
     filter_class = FolderFilter
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ["project__name", "name", "type"]
+    search_fields = ["path", "parent_folder"]
 
     queryset = Folder.objects.all()
 
@@ -71,11 +71,10 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     filter_class = DocumentFilter
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ["project__name", "name", "type"]
+    search_fields = ["project__name", "name"]
 
     serializer_class = DocumentSerializer
 
-    http_method_names = ["get", "post", "put"]
     permission_classes = [IsAuthenticated, IsCurrentOrSuperUser]
 
     queryset = Document.objects.all()
