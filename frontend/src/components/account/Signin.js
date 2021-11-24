@@ -18,6 +18,7 @@ import { useHistory, useLocation, Redirect } from "react-router-dom";
 
 import { login } from "../../api/auth";
 import { UserContext } from "../../context/userContext";
+import TokenService from "../../services/TokenService";
 
 function Copyright() {
   return (
@@ -97,7 +98,7 @@ export default function SignIn() {
     }
   };
 
-  return userLogin ? (
+  return TokenService.isLoggedIn() ? (
     <Redirect to="/" />
   ) : (
     <Container component="main" maxWidth="xs">

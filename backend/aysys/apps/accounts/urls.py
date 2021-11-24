@@ -5,6 +5,8 @@ from apps.accounts import views
 
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from apps.accounts.views import LogoutView
+
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet)
 router.register(r"groups", views.GroupViewSet)
@@ -18,4 +20,5 @@ urlpatterns = [
         name="token_obtain_pair",
     ),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("logout/", LogoutView.as_view(), name="logout"),
 ]

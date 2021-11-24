@@ -14,11 +14,16 @@ class TokenService {
   }
 
   setAuthTokens(auth_tokens) {
+    console.log("setAuthTokens", auth_tokens);
     localStorage.setItem(AUTH_TOKENS, JSON.stringify(auth_tokens));
   }
 
   removeAuthTokens() {
     localStorage.removeItem(AUTH_TOKENS);
+  }
+
+  isLoggedIn() {
+    return this.getAuthTokens()?.access ? true : false;
   }
 }
 
