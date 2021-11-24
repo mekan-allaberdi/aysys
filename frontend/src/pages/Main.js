@@ -28,20 +28,28 @@ import GroupTwoToneIcon from "@material-ui/icons/GroupTwoTone";
 import SendTwoToneIcon from "@material-ui/icons/SendTwoTone";
 import StarTwoToneIcon from "@material-ui/icons/StarTwoTone";
 
-import { makeStyles } from "@material-ui/core/styles";
-
 import { StylesProvider } from "@material-ui/core/styles";
 
 import Menu from "@material-ui/core/Menu";
 
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import SignIn from "../components/account/Signin";
 
-import { Route, Switch, NavLink as Link } from "react-router-dom";
+import {
+  withRouter,
+  Route,
+  Switch,
+  Redirect,
+  NavLink as Link,
+} from "react-router-dom";
 
 import { Avatar } from "@material-ui/core";
 import FolderChooser from "../components/document_manager/DocMain";
 import UserList from "../components/account/UserList";
 import { red } from "@material-ui/core/colors";
+import { DocManProvider } from "../context/docManContext";
+
+import { logout } from "../api/auth";
 
 const drawerWidth = 220;
 
@@ -76,7 +84,7 @@ const styles = (theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    transform: "rotate(90deg)",
+    transform: "rotate(180deg)",
   },
   hide: {
     display: "none",
@@ -153,6 +161,7 @@ class MiniDrawer extends React.Component {
   state = {
     open: false,
     anchorEl: null,
+    logoutClicked: false,
   };
 
   handleDrawerOpen = () => {
@@ -170,10 +179,22 @@ class MiniDrawer extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  handleLogout = () => {
+    logout()
+      .then(() => {
+        this.props.history.push("/login");
+      })
+      .catch((err) => {
+        console.log("Error occurred");
+        alert(err.message);
+      });
+  };
+
   render() {
     const { classes, theme } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, logoutClicked } = this.state;
     const open = Boolean(anchorEl);
+
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -245,7 +266,12 @@ class MiniDrawer extends React.Component {
                   <Typography variant="inherit">Setttings</Typography>
                 </MenuItem>
                 <Divider />
-                <MenuItem>
+                <MenuItem
+                  button
+                  onClick={this.handleLogout}
+                  component={Link}
+                  to="/login"
+                >
                   <ListItemIcon>
                     <ExitToAppIcon />
                   </ListItemIcon>
@@ -310,19 +336,19 @@ class MiniDrawer extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button key="3">
+            <ListItem button key="333">
               <ListItemIcon>
                 <WorkTwoToneIcon style={{ color: "#37474F" }} />
               </ListItemIcon>
               <ListItemText primary="Projects" />
             </ListItem>
-            <ListItem button key="3">
+            <ListItem button key="13">
               <ListItemIcon>
                 <GroupTwoToneIcon style={{ color: "#37474F" }} />
               </ListItemIcon>
               <ListItemText primary="Employees" />
             </ListItem>
-            <ListItem button key="2">
+            <ListItem button key="22">
               <ListItemIcon>
                 <FormatListBulletedTwoToneIcon style={{ color: "#37474F" }} />
               </ListItemIcon>
@@ -350,7 +376,7 @@ class MiniDrawer extends React.Component {
               </ListItemIcon>
               <ListItemText primary="Inbox" />
             </ListItem>
-            <ListItem button component={Link} to="/users" key="3">
+            <ListItem button component={Link} to="/users" key="33">
               <ListItemIcon>
                 <SendTwoToneIcon style={{ color: "#37474F" }} />
               </ListItemIcon>
@@ -366,10 +392,13 @@ class MiniDrawer extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <Switch>
-            <StylesProvider injectFirst>
-              <Route path="/" exact component={FolderChooser} />
-            </StylesProvider>
+            <DocManProvider>
+              <StylesProvider injectFirst>
+                <Route path="/" exact component={FolderChooser} />
+              </StylesProvider>
+            </DocManProvider>
             <Route path="/users" component={UserList} />
+            <Route component={SignIn} path="/login" />
           </Switch>
         </main>
       </div>

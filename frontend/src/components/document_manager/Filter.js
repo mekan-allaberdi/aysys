@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import SearchIcon from "@material-ui/icons/Search";
 
 class Filter extends React.Component {
   constructor(props) {

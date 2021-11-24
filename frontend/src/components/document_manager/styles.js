@@ -194,6 +194,15 @@ export default (theme) => ({
       top: "2em",
     },
   },
+  container_buttons: {
+    textAlign: "flex",
+    display: "inline-block",
+  },
+  button_cell: {
+    margin: "1px",
+    textAlign: "center",
+    display: "inline-block",
+  },
   breadcrumbs: {},
   search: {},
   data: {},
