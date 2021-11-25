@@ -74,25 +74,24 @@ const errorInterceptor = (error) => {
       })
       .catch((error) => {
         logout();
-        return Promise.reject(error);
       });
   }
   return Promise.reject(error);
 };
 
 const logout = async () => {
-  return api
+  return tokenRequest
     .post("/auth/logout/", {
       refresh_token: TokenService.getLocalRefreshToken(),
     })
     .then(() => {
       TokenService.removeAuthTokens();
       api.defaults.headers["Authorization"] = "";
-      return Promise.resolve();
+      tokenRequest.defaults.headers["Authorization"] = "";
+      window.location = "/login";
     })
     .catch((error) => {
-      console.log(error);
-      return Promise.reject(error);
+      window.location = "/login";
     });
 };
 
