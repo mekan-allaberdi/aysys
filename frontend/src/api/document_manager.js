@@ -24,7 +24,7 @@ const new_folder = async (parent_folder, folder_name, path) => {
   return api
     .post(URL + "folders/", params)
     .then((response) => {
-      return response.data;
+      return response;
     })
     .catch((error) => {
       return Promise.reject(error);
